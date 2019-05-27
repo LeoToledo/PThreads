@@ -3,13 +3,11 @@
 #include <stdlib.h>
 #include <gmp.h>
 
-
 void gaussLegendre(int n, mpf_t pi);
-
 
 void gaussLegendre(int n, mpf_t pi)
 {
-      mpf_set_default_prec(pow(10,5));
+      mpf_set_default_prec(pow(10,5)); //Reserva mais memoria para as variaveis
 
       //Declarando as variáveis
       mpf_t aValue;
@@ -63,7 +61,7 @@ void gaussLegendre(int n, mpf_t pi)
             mpf_sqrt(bValue, bValue);
             
 
-            //Cálculo de t **********88(PROBLEMA NO VALOR FINAL DE TVALUE)**********
+            //Cálculo de t
             mpf_sub(tTemp, aAux, aValue);
             mpf_mul(tTemp, tTemp, tTemp);
             mpf_mul(tTemp, pAux, tTemp);
@@ -97,13 +95,11 @@ int main()
       /*
      * Basta alterar o valor de 10 por outro
   * valor maior, para obter valores mais precisos.
-  * CUIDADO!!! Se você colocar um valor muito alto,
-  * pode gerar extrema lentidão no seu pc. 
   */
       mpf_t pi;
       mpf_init (pi);
       
-      gaussLegendre(pow(10,9), pi);
+      gaussLegendre(pow(10,4), pi);
 
       gmp_printf("\n\nPi piriripipi:  %Ff\n\n", pi);
       return 0;
