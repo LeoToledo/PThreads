@@ -61,8 +61,9 @@ int main()
 	/* O init deve ser chamado! */
 	initBoxMullerState(&state);
 	
-	int i;
+	int i, n; //n é o número de iterações
 	for (i = 0; i < 10; ++i)
+                while()
 		printf("%lf\n", boxMullerRandom(&state));
 	
 	return 0;
