@@ -5,7 +5,7 @@
 #include <time.h>
 #include <gmp.h>
 
-unsigned int gseed = 45162;
+unsigned int gseed = 40000;
 
 typedef struct //Struct para guardar os valores de x e y
 {
@@ -27,7 +27,7 @@ int main(int argc, char *argv)
     mpf_init (pi);
 
     //Por fim, vamos chamar a função que utiliza o método monteCarlo
-    monteCarlo(pow(10,8), pi);
+    monteCarlo(pow(10,6), pi);
     gmp_printf("\n\nPi piriripipi:  %.20Ff\n\n", pi);
     return 0;
 }
@@ -37,6 +37,8 @@ aleatorio geraAleatorio()
     aleatorio nAleatorio; //Guarda as coordenadas do ponto aleatório geradox
     nAleatorio.x = (((double)rand_r(&gseed)) / ((double)RAND_MAX));
     nAleatorio.y = (((double)rand_r(&gseed)) / ((double)RAND_MAX));
+    //printf("\nX: %f", nAleatorio.x);
+    //  printf("\nY: %f", nAleatorio.y);
     return nAleatorio;
 }
 
