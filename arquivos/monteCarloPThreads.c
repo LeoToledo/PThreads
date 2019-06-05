@@ -21,8 +21,18 @@ aleatorio geraAleatorio();      //Função que gera números aleatórios entre 0
 void *monteCarlo(void *arg);    //Calcula o valor de pi através do método de Monte Carlos
 double calculaPi(int *vDentro); //Faz o calculo final de pi
 
-int main(int argc, char *argv)
+int main(int argc, char const *argv[])
 {
+
+        if (argc != 3)
+        {
+                printf("Erro na passagem de parametros !");
+                return -1;
+        }
+
+        FILE *arquivo;
+        arquivo = fopen(argv[1], "r");
+
         //Para gerar numeros aleatórios
         gseed = time(NULL);
         srand(gseed);
@@ -44,7 +54,12 @@ int main(int argc, char *argv)
         double pi = calculaPi(vDentro); //Calcula o valor final de pi
 
         //Por fim, vamos printar o valor calculado de pi
-        printf("PI: %f", pi);
+        printf("PI: %.6f", pi);
+        FILE *arqSaida;
+        arqSaida = fopen(argv[2], "w");
+
+        fclose(arquivo);
+        fclose(arqSaida);
 
         return 0;
 }
