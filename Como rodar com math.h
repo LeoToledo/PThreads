@@ -1,1 +1,1 @@
-gcc -o code.exe code.c -lm
+gcc -o code.exe code.c -lm -lgmp -lpthread

@@ -4,29 +4,34 @@
 #include <gmp.h>
 #include <time.h>
 
-#define N 100000              //Quantidade de iterações desejada
 unsigned int gseed = 40000; //Para gerar números aleatórios
 
 //Declaração das funções utilizadas
 void blackScholes();                                                 //Utiliza o método de blackScholes
 double media(double trials[], unsigned int m);                       //Calcula a média de um vetor de double
 double desvio_padrao(double trials[], unsigned int m, double media); //Calcula o desvio padrão de um vetor de double
-double intervalo_confianca(double trials[], double desv);            //Calcula o intervalo de confiança dados a média e desvio padrão anteriores
+double intervalo_confianca(double trials[], double desv, int M);     //Calcula o intervalo de confiança dados a média e desvio padrão anteriores
 
-int main()
+int main(int argc, char const *argv[])
 {
+    if (argc != 3)
+    {
+        printf("Erro na passagem de parametros !");
+        return -1;
+    }
     //Para gerar numeros aleatórios
     gseed = time(NULL);
     srand(gseed);
 
-    blackScholes();
+    blackScholes(argv);
+
     return 0;
 }
 
-void blackScholes()
+void blackScholes(char const *argv[])
 {
     //Primeiramente, vamos ler o txt
-    FILE *arquivo = fopen("entrada_blackscholes.txt", "r");
+    FILE *arquivo = fopen(argv[1], "r");
 
     if (arquivo == NULL) //Caso não seja possível abrir o arquivo
     {
@@ -45,14 +50,14 @@ void blackScholes()
     double r = valores[2];     //Taxa de juros livre de riscos(SELIC)
     double sigma = valores[3]; //Volatilidade da ação
     double T = valores[4];     //Tempo de validade da opção
-    double M = valores[5];     //Número de iterações
+    int M = (int)valores[5];   //Número de iterações
 
-    double trials[N];
+    double trials[M];
 
     double aux1, aux2, t;
 
     double x;
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < M; i++)
     {
         x = (((double)rand_r(&gseed)) / ((double)RAND_MAX)); //X será um número randomico entre 0 e 1
 
@@ -78,11 +83,13 @@ void blackScholes()
         }
         //printf("TRIALS: %lf", trials[i]);
     }
-    double med = media(trials, N);                                      //Calcula a média dos valores
-    double desv_pad = desvio_padrao(trials, N, med);                    //Calcula o desvio padrão dos valores
-    double confidence_interval = intervalo_confianca(trials, desv_pad); //Calcula o intervalo de confiança dos valores
-    double confMin = (med - confidence_interval);                       //Confiança mínima
+
+    double med = media(trials, M);                                         //Calcula a média dos valores
+    double desv_pad = desvio_padrao(trials, M, med);                       //Calcula o desvio padrão dos valores
+    double confidence_interval = intervalo_confianca(trials, desv_pad, M); //Calcula o intervalo de confiança dos valores
+    double confMin = (med - confidence_interval);                          //Confiança mínima
     double confMax = (med + confidence_interval);
+
     printf("\nMedia: %f\n", med);
     printf("\nDesvio Padrao: %f\n", desv_pad);
     printf("\nIntervalo de Confiança: %f\n", confidence_interval);
@@ -90,14 +97,17 @@ void blackScholes()
     printf("\nConfianca maxima: %f\n", confMax);
 
     //Por fim, vamos escrever no arquivo de saída
-    FILE *arquivoSaida = fopen("blackScholes_out.txt", "w");
+    FILE *arquivoSaida = fopen(argv[2], "w");
     if (arquivoSaida == NULL) //Checa se foi possível abrir o arquivo
     {
         printf("ERRO AO ESCREVER NO ARQUIVO");
         return;
     }
 
-    fprintf(arquivoSaida, "%lf \n%lf \n%lf \n%lf \n%lf \n%lf \n%lf \n%lf", S, E, r, sigma, T, M, confMin, confMax);
+    fprintf(arquivoSaida, "%lf \n%lf \n%lf \n%lf \n%lf \n%d \n%lf \n%lf", S, E, r, sigma, T, M, confMin, confMax);
+
+    fclose(arquivo);
+    fclose(arquivoSaida);
 }
 
 double media(double trials[], unsigned int m)
@@ -125,8 +135,8 @@ double desvio_padrao(double trials[], unsigned int m, double media)
     return dp;
 }
 
-double intervalo_confianca(double trials[], double desv)
+double intervalo_confianca(double trials[], double desv, int M)
 {
-    double confwidth = ((1.96 * desv) / sqrt(N));
+    double confwidth = ((1.96 * desv) / sqrt(M));
     return confwidth;
 }

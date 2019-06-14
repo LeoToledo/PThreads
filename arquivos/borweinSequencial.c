@@ -5,13 +5,28 @@
 
 void borwein(int n, mpf_t pi);
 
-int main()
+int main(int argc, char const *argv[])
 {
+    if (argc != 3)
+    {
+        printf("Erro na passagem de parametros !");
+        return -1;
+    }
+
+    FILE *arquivo;
+    arquivo = fopen(argv[1], "r");
+
     mpf_t pi;
     mpf_init(pi);
     mpf_set_ui(pi, 3);
-    borwein(pow(10,5), pi);
-    gmp_printf("\n\nPi piriripipi:  %.20Ff\n\n", pi);
+    borwein(pow(10, 5), pi);
+    gmp_printf("\n\nPi: %.6Ff\n\n", pi);
+
+    FILE *arqSaida;
+    arqSaida = fopen(argv[2], "w");
+
+    fclose(arquivo);
+    fclose(arqSaida);
     return 0;
 }
 
@@ -33,9 +48,9 @@ void borwein(int n, mpf_t pi)
     mpf_init(c);
     mpf_init(d);
     mpf_init(e);
-    mpf_init (pi_aux);
+    mpf_init(pi_aux);
 
-    mpf_set_ui(pi, 0); //Inicia pi com 0
+    mpf_set_ui(pi, 0);          //Inicia pi com 0
     for (int i = 0; i < n; i++) //Fazendo o somatório
     {
         //Atribuindo os valores iniciais
