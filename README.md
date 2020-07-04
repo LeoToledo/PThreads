@@ -1,2 +1,2 @@
 # SO2019-GRUPOX
-Trabalho de Sistemas Operacionais
+Aplicação de Pthreads nos algoritmos de Borwein, MonteCarlo, GaussLegendre e BlackScholes
